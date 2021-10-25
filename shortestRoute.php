@@ -71,6 +71,10 @@
             $u = $previous[$u];
         }
         array_unshift($path, $u);
+        // add total cost in each step
+        foreach ($path as $index => $value) {
+            $path[$index] = [$path[$index], $distance[$value]];
+        }
         return [$path,$distMin];
     }
 
@@ -90,7 +94,6 @@
 
         foreach ($vertices as $city) {
             // initialize values
-            // echo "ESTAMOS PROCESANDO LA RUTA MAS CORTA PARA ".$city."\n";
             foreach ($vertices as $vertex) {
                 $distance[$vertex] = INF;
                 $previous[$vertex] = NULL;
@@ -146,7 +149,14 @@
     // Shortest route between two points
     [$path,$cost] = shortest_path_oneToOne($graph, $source, $target);
 
-    echo "The shortest path between ".$source." y ".$target." is: ".implode(", ", $path)." and the distance is: ".$cost.".";
+    foreach ($path as $index =>$stop){
+        if ($index > 0){
+            $lista[$index] = $stop[0]." (".$stop[1] - intval($path[$index-1][1]).")";
+        } else {
+            $lista[$index] = $stop[0]." (".$stop[1].")";
+        }
+    }
+    echo "The shortest path between ".$source." y ".$target." is: ".implode(", ", $lista)." and the total distance is: ".$cost.".";
 
 
     $source2 = "Lleida";
